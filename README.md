@@ -11,4 +11,3 @@ the script contains code to automatically import environment variables
 
 when creating tokens for pull and push requests to github, consider creating a fine grained token with read and write for only the repo to be backed up
 
-the log file will contain sensitive info from the .env file. be cautious with it or change the code to not log sensitive info.
