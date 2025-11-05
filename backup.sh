@@ -29,6 +29,11 @@ error() {
     echo "[$(date +'%Y-%m-%d %H:%M:%S')]: $1" | sudo tee -a "$LOG_DIR/backup_script.log" > /dev/null
 }
 
+notify() {
+    echo "$1"
+    notify-send -a"" "backup script" "$1"
+}
+
 
 #check if command is available
 check_dependencies() {
@@ -53,16 +58,16 @@ init_repo() {
                     log "remote repo cloned"
                 else
                     error "could not clone into current directory. directory may not be empty"
-                    notify-send -a"" "backup script" "could not clone remote repo. failed"
+                    notify "could not clone remote repo. failed"
                     exit 1
                 fi
             else
-                notify-send -a"" "backup script" "could not access local dir. failed"
+                notify "could not access local dir. failed"
                 error "could not access local dir. failed"
                 exit 1
             fi
         else
-            notify-send -a"" "backup script" "could not create local dir. backup failed"
+            notify "could not create local dir. backup failed"
             error "could not create local repo at $REPO_DIR. failed"
             exit 1
         fi
@@ -76,11 +81,11 @@ init_repo() {
                 log "remote repo cloned"
             else
                 error "could not clone into current directory. directory may not be empty"
-                notify-send -a"" "backup script" "could not add origin. backup failed"
+                notify "could not add origin. backup failed"
                 exit 1
             fi
         else
-            notify-send -a"" "backup script" "could not access local dir. failed"
+            notify "could not access local dir. failed"
             error "could not access local dir. failed"
             exit 1
         fi 
@@ -100,12 +105,12 @@ create_log()  {
             if sudo touch "$LOG_DIR/backup_script.log"; then
                 log "log file created successfully"
             else
-                notify-send -a"" "creating log file failed. please create it for logging of backup events"
+                notify "creating log file failed. please create it for logging of backup events"
                 
                 error "failed to create log directory and file"
             fi
         else
-            notify-send -a"" "creating log folder failed. please create it for logging of backup events"
+            notify "creating log folder failed. please create it for logging of backup events"
 
             error "failed to create log folder"
         fi
@@ -115,7 +120,7 @@ create_log()  {
             log "log file file created"
 
         else
-            notify-send -a"" "creating log file failed. please create it for logging of backup events"
+            notify "creating log file failed. please create it for logging of backup events"
 
             error "failed to create log file"
         fi
@@ -135,7 +140,7 @@ perform_backup() {
         log "accessed local folder at $REPO_DIR"
 
     else
-        notify-send -a"" "backup script" "could not access local repo. backup failed"
+        notify "could not access local repo. backup failed"
         error "failed to access local folder at $REPO_DIR"
         return 1
     fi
@@ -162,7 +167,7 @@ perform_backup() {
         
     else
         error "could not pull from remote repo"
-        notify-send -a"" "backup script" "could not pull changes from remote repo. backup failed"
+        notify "could not pull changes from remote repo. backup failed"
         exit 1
     fi
 
@@ -233,11 +238,11 @@ main() {
     create_log
 
     if perform_backup; then
-        notify-send -a"" "backup script" "backup completed successfully"
+        notify "backup completed successfully"
         log "backup completed successfully"
         exit 0
     else
-        notify-send -a"" "backup script" "backup failed"
+        notify "backup failed"
         error "backup failed"
         exit 1
     fi
