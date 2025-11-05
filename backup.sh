@@ -30,7 +30,7 @@ error() {
 }
 
 notify() {
-    echo "$1"
+    #echo "$1"
     notify-send -a"" "backup script" "$1"
 }
 
@@ -239,6 +239,7 @@ main() {
 
     if perform_backup; then
         notify "backup completed successfully"
+        log "backup completed successfully"
         exit 0
     else
         notify "backup failed"
